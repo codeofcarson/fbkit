@@ -1,4 +1,5 @@
 import datetime
+import decorator
 import logging
 import re
 import time
@@ -175,51 +176,31 @@ def require_oauth(redirect_path=None, required_permissions=None,
         def some_view(request):
             ...
     """
-    def decorator(view):
-        def newview(request, *args, **kwargs):
-            # permissions=newview.permissions
-
-            try:
-                fb = request.facebook
-                redirect_uri = fb.get_callback_path(request.path)
-                valid_token = fb.oauth2_check_session(request)
-                if valid_token and required_permissions:
-                    has_permissions = fb.oauth2_check_permissions(
-                        request, required_permissions, check_permissions,
-                        valid_token, force_check)
-                else:
-                    has_permissions = True
-                if not valid_token or not has_permissions:
-                    return fb.require_auth(next=redirect_uri,
-                            required_permissions=required_permissions)
-                return view(request, *args, **kwargs)
-            except facebook.FacebookError as e:
-                # Invalid token (I think this can happen if the user logs out)
-                # Unfortunately we don't find this out until we use the api 
-                if e.code == 190:
-                    del request.session['facebook']
-                    return fb.require_auth(next=redirect_uri,
-                            required_permissions=required_permissions)
-                raise
-        # newview.permissions = permissions
-        return newview
-    return decorator
-
-# try to preserve the argspecs
-try:
-    import decorator
-except ImportError:
-    pass
-else:
-    # Can this be done with functools.wraps, but maintaining kwargs?
-    def updater(f):
-        def updated(*args, **kwargs):
-            original = f(*args, **kwargs)
-            def newdecorator(view):
-                return decorator.new_wrapper(original(view), view)
-            return decorator.new_wrapper(newdecorator, original)
-        return decorator.new_wrapper(updated, f)
-    require_oauth = updater(require_oauth)
+    @decorator.decorator
+    def newview(view, request, *args, **kwargs):
+        try:
+            fb = request.facebook
+            redirect_uri = fb.get_callback_path(request.path)
+            valid_token = fb.oauth2_check_session(request)
+            if valid_token and required_permissions:
+                has_permissions = fb.oauth2_check_permissions(
+                    request, required_permissions, check_permissions,
+                    valid_token, force_check)
+            else:
+                has_permissions = True
+            if not valid_token or not has_permissions:
+                return fb.require_auth(next=redirect_uri,
+                        required_permissions=required_permissions)
+            return view(request, *args, **kwargs)
+        except facebook.FacebookError as e:
+            # Invalid token (I think this can happen if the user logs out)
+            # Unfortunately we don't find this out until we use the api 
+            if e.code == 190:
+                del request.session['facebook']
+                return fb.require_auth(next=redirect_uri,
+                        required_permissions=required_permissions)
+            raise
+    return newview
 
 class FacebookMiddleware(object):
     """
