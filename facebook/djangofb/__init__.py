@@ -147,7 +147,7 @@ class Facebook(facebook.Facebook):
             logging.debug('Exchanging oauth code for an access_token')
             # We've got a code from an authorisation, so convert it to a access_token
             self.oauth2_access_token(request.GET['code'], next=redirect_uri)
-            return HttpResponseRedirect(self.get_app_url())
+            return HttpResponseRedirect(redirect_uri)
         elif 'signed_request' in request.REQUEST:
             logging.debug('Loading oauth data from "signed_request"')
             self.oauth2_load_session(
@@ -240,6 +240,8 @@ class FacebookMiddleware(object):
         elif int(request.GET.get('fb_sig_added', '1')) and request.session.get('facebook_session_key', None) and request.session.get('facebook_user_id', None):
             request.facebook.session_key = request.session['facebook_session_key']
             request.facebook.uid = request.session['facebook_user_id']
+        elif request.facebook.oauth2_token and not request.facebook.uid:
+            request.facebook.uid  = request.facebook.graph.filter('me').get()['id']
 
     def process_response(self, request, response):
         # Don't assume that request.facebook exists
