@@ -152,6 +152,7 @@ class Facebook(facebook.Facebook):
             logging.debug('Loading oauth data from "signed_request"')
             self.oauth2_load_session(
                     self.validate_oauth_signed_request(request.REQUEST['signed_request']))
+            return HttpResponseRedirect(request.get_full_path())
         elif 'session' in request.REQUEST:
             logging.debug('Loading oauth data from "session"')
             self.oauth2_load_session(
