@@ -16,8 +16,8 @@ except ImportError:
 import httplib
 from minimock import Mock
 
-my_api_key = "e1e9cfeb5e0d7a52e4fbd5d09e1b873e"
-my_secret_key = "1bebae7283f5b79aaf9b851addd55b90"
+my_app_id = "249784291698385"
+my_app_secret = "1ab476e5962c119b61a819e692feff77"
 #'{"error_code":100,\
                  #"error_msg":"Invalid parameter",\
                  #"request_args":[{"key":"format","value":"JSON"},\
@@ -48,10 +48,10 @@ class pyfacebook_UnitTests(unittest.TestCase):
         pass
                 
     def test1(self):
-        f = facebook.Facebook(api_key=my_api_key, secret_key=my_secret_key)
+        f = facebook.Facebook(app_id=my_app_id, app_secret=my_app_secret)
         f.login = self.login
-        self.assertEquals(f.api_key,my_api_key)
-        self.assertEquals(f.secret_key,my_secret_key)
+        self.assertEquals(f.app_id,my_app_id)
+        self.assertEquals(f.app_secret,my_app_secret)
         self.assertEquals(f.auth_token,None)
         self.assertEquals(f.app_name,None)
         self.assertEquals(f.callback_path,None)
@@ -60,7 +60,7 @@ class pyfacebook_UnitTests(unittest.TestCase):
         args = {"arg1":"a","arg2":"b","arg3":"c"}
         hasher = md5_constructor(''.join(['%s=%s' % (x, args[x]) for x in sorted(args.keys())]))
         hasher.update("acdnj")
-        f = facebook.Facebook(api_key="abcdf", secret_key="acdnj")
+        f = facebook.Facebook(app_id="abcdf", app_secret="acdnj")
         f.login = self.login
         digest = f._hash_args(args)
         self.assertEquals(hasher.hexdigest(),digest)
@@ -81,7 +81,7 @@ class pyfacebook_UnitTests(unittest.TestCase):
         global response_str
         response = {'stuff':'abcd'}
         response_str = simplejson.dumps(response)
-        fb = facebook.Facebook(my_api_key, my_secret_key)
+        fb = facebook.Facebook(my_app_id, my_app_secret)
         fb.login = self.login
         fb.auth.createToken()
         self.assertEquals(str(fb.auth_token['stuff']),"abcd")
@@ -98,19 +98,19 @@ class pyfacebook_UnitTests(unittest.TestCase):
         global response_str
         response = 'abcdef'
         response_str = simplejson.dumps(response)
-        fb = facebook.Facebook(my_api_key, my_secret_key)
+        fb = facebook.Facebook(my_app_id, my_app_secret)
         fb.login = self.login
         fb.auth.createToken()
         self.assertEquals(str(fb.auth_token),"abcdef")
-        url = fb.get_login_url(next="nowhere", popup=True, canvas=True)
+        url = fb.get_login_url(next="nowhere", popup=True)
         self.assertEquals(url,
-                          'http://www.facebook.com/login.php?canvas=1&popup=1&auth_token=abcdef&next=nowhere&v=1.0&api_key=%s'%(my_api_key,))
+                          'http://www.facebook.com/login.php?&popup=1&auth_token=abcdef&next=nowhere&v=1.0&client_id=%s'%(my_app_id,))
         
     def test6(self):
         global response_str
         response = 'abcdef'
         response_str = simplejson.dumps(response)
-        fb = facebook.Facebook(my_api_key, my_secret_key)
+        fb = facebook.Facebook(my_app_id, my_app_secret)
         fb.login = self.login
         fb.auth.createToken()
         response = {"session_key":"key","uid":"my_uid","secret":"my_secret","expires":"my_expires"}
@@ -121,13 +121,13 @@ class pyfacebook_UnitTests(unittest.TestCase):
         global response_str
         response = 'abcdef'
         response_str = simplejson.dumps(response)
-        fb = facebook.Facebook(my_api_key, my_secret_key)
+        fb = facebook.Facebook(my_app_id, my_app_secret)
         fb.login = self.login
         fb.auth.createToken()
         self.assertEquals(str(fb.auth_token),"abcdef")
         url = fb.get_authorize_url(next="next",next_cancel="next_cancel")
         self.assertEquals(url,
-                          'http://www.facebook.com/authorize.php?api_key=%s&next_cancel=next_cancel&v=1.0&next=next' % (my_api_key,))
+                          'http://www.facebook.com/authorize.php?app_id=%s&next_cancel=next_cancel&v=1.0&next=next' % (my_app_id,))
         
     def test8(self):
         class Request:
@@ -140,7 +140,7 @@ class pyfacebook_UnitTests(unittest.TestCase):
         response = {"session_key":"abcdef","uid":"my_uid","secret":"my_secret","expires":"my_expires"}
         response_str = simplejson.dumps(response)
         req = Request({},{'installed':1,'fb_page_id':'id','auth_token':'abcdef'},'GET')
-        fb = facebook.Facebook(my_api_key, my_secret_key)
+        fb = facebook.Facebook(my_app_id, my_app_secret)
         fb.login = self.login
         res = fb.check_session(req)
         self.assertTrue(res)
@@ -149,13 +149,13 @@ class pyfacebook_UnitTests(unittest.TestCase):
         global response_str
         response = 'abcdef'
         response_str = simplejson.dumps(response)
-        fb = facebook.Facebook(my_api_key, my_secret_key)
+        fb = facebook.Facebook(my_app_id, my_app_secret)
         fb.login = self.login
         fb.auth.createToken()
         self.assertEquals(str(fb.auth_token),"abcdef")
         url = fb.get_add_url(next="next")
         self.assertEquals(url,
-                          'http://www.facebook.com/install.php?api_key=%s&v=1.0&next=next' % (my_api_key,))
+                          'http://www.facebook.com/install.php?client_id=%s&v=1.0&next=next' % (my_app_id,))
 
     def send(self,xml):
         self.xml = xml
@@ -166,12 +166,12 @@ class pyfacebook_UnitTests(unittest.TestCase):
         filename = "image_file.jpg"
         image1.save(filename)
         global response_str
-        fb = facebook.Facebook(my_api_key, my_secret_key)
+        fb = facebook.Facebook(my_app_id, my_app_secret)
         fb.login = self.login
         
-        facebook.httplib.HTTP = Mock('httplib.HTTP')
+        httplib.HTTP = Mock('httplib.HTTP')
         http_connection = Mock('http_connection')
-        facebook.httplib.HTTP.mock_returns = http_connection
+        httplib.HTTP.mock_returns = http_connection
         http_connection.send.mock_returns_func = self.send
         def _http_passes():
             return [200,]
