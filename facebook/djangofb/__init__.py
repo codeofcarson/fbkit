@@ -162,8 +162,9 @@ class Facebook(facebook.Facebook):
         logging.debug('Saving oauth data to session')
         request.session['facebook'] = self.oauth2_save_session()
 
-def require_oauth(redirect_path=None, required_permissions=None,
-        check_permissions=None, force_check=True):
+def require_oauth(redirect_path=None,
+        required_permissions=settings.FACEBOOK_PERMS, check_permissions=None,
+        force_check=True):
     """
     Decorator for Django views that requires the user to be OAuth 2.0'd.
     The FacebookMiddleware must be installed.
@@ -212,11 +213,10 @@ class FacebookMiddleware(object):
     the DRY principle.
     """
 
-    def __init__(self, api_key=None, secret_key=None, app_name=None,
+    def __init__(self, app_secret=None, app_name=None,
                  callback_path=None, app_id=None,
                  oauth2=None):
-        self.api_key = api_key or settings.FACEBOOK_API_KEY
-        self.secret_key = secret_key or settings.FACEBOOK_SECRET_KEY
+        self.app_secret = app_secret or settings.FACEBOOK_APP_SECRET
         self.app_name = app_name or getattr(settings, 'FACEBOOK_APP_NAME', None)
         self.callback_path = callback_path or getattr(settings, 'FACEBOOK_CALLBACK_PATH', None)
         self.app_id = app_id or getattr(settings, 'FACEBOOK_APP_ID', None)
@@ -228,8 +228,7 @@ class FacebookMiddleware(object):
         callback_path = self.callback_path
         if callable(callback_path):
             callback_path = callback_path()
-        request.facebook = Facebook(self.api_key,
-                self.secret_key, app_name=self.app_name,
+        request.facebook = Facebook(self.app_secret, app_name=self.app_name,
                 callback_path=callback_path, proxy=self.proxy,
                 app_id=self.app_id)
         response = request.facebook.oauth2_process_request(request)

@@ -118,12 +118,9 @@ class Facebook(object):
     added
         True if the user has added this application.
 
-    api_key
-        Your API key, as set in the constructor.
-
     app_id
         Your application id, as set in the constructor or fetched from
-        fb_sig_app_id request parameter.
+        fb_sig_app_id request parameter. This is also the app's key.
 
     app_name
         Your application's name, i.e. the APP_NAME in http://apps.facebook.com/APP_NAME/ if
@@ -171,7 +168,7 @@ class Facebook(object):
     secret
         Secret that is used after getSession for desktop apps.
 
-    secret_key
+    app_secret
         Your application's secret key, as set in the constructor.
 
     session_key
@@ -189,7 +186,7 @@ class Facebook(object):
 
     """
 
-    def __init__(self, api_key, secret_key, auth_token=None, app_name=None,
+    def __init__(self, app_secret, auth_token=None, app_name=None,
                  callback_path=None, proxy=None, facebook_url=None,
                  facebook_secure_url=None, generate_session_secret=0,
                  app_id=None):
@@ -209,8 +206,7 @@ class Facebook(object):
         facebook.auth.getSession()
 
         """
-        self.api_key = api_key
-        self.secret_key = secret_key
+        self.app_secret = app_secret
         self.app_id = app_id
         self.oauth2_token = None
         self.oauth2_token_expires = None
@@ -253,7 +249,7 @@ class Facebook(object):
         elif self.secret:
             hasher.update(self.secret)
         else:
-            hasher.update(self.secret_key)
+            hasher.update(self.app_secret)
         return hasher.hexdigest()
 
 
@@ -381,7 +377,7 @@ class Facebook(object):
         """
         args = {
             'client_id': self.app_id,
-            'client_secret': self.secret_key,
+            'client_secret': self.app_secret,
             'redirect_uri': next,
             'code': code
         }
@@ -460,7 +456,7 @@ class Facebook(object):
             return None
         if data['algorithm'] != 'HMAC-SHA256':
             return None
-        digest = hmac.new(settings.FACEBOOK_SECRET_KEY, payload, hashlib.sha256).digest()
+        digest = hmac.new(settings.FACEBOOK_APP_SECRET, payload, hashlib.sha256).digest()
         if str(digest) != sig:
             return None
         return {
@@ -473,10 +469,10 @@ class Facebook(object):
 if __name__ == '__main__':
     # sample desktop application
 
-    api_key = ''
-    secret_key = ''
+    app_id = ''
+    app_secret = ''
 
-    facebook = Facebook(api_key, secret_key)
+    facebook = Facebook(app_id, app_secret)
 
     facebook.auth.createToken()
 
