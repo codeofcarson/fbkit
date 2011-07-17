@@ -63,11 +63,10 @@ class FacebookRequestHandler(RequestHandler):
         super(FacebookRequestHandler, self).initialize(request, response)
 
         app_name = self._fbconfig_value('app_name', '')
-        api_key = self._fbconfig_value('api_key', None)
-        secret_key = self._fbconfig_value('secret_key', None)
+        app_id = self._fbconfig_value('api_id', None)
+        app_secret = self._fbconfig_value('app_secret', None)
 
-        self.facebook = Facebook(api_key, secret_key,
-            app_name=app_name)
+        self.facebook = Facebook(app_id, app_secret, app_name=app_name)
 
         require_app = self._fbconfig_value('require_app', False)
         require_login = self._fbconfig_value('require_login', False)

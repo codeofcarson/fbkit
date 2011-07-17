@@ -119,7 +119,7 @@ class Graph(object):
     def get_app_access_token(self):
         query = urllib.urlencode({
             'client_id': self._facebook.app_id,
-            'client_secret': self._facebook.secret_key,
+            'client_secret': self._facebook.app_secret,
             'type': 'client_cred',
         })
         url = urlparse.urlunparse((
@@ -138,7 +138,7 @@ class Graph(object):
     def get_user_access_token(self, session_key):
         query = urllib.urlencode({
             'client_id': self._facebook.app_id,
-            'client_secret': self._facebook.secret_key,
+            'client_secret': self._facebook.app_secret,
             'type': 'client_cred',
             'sessions': session_key,
         })
