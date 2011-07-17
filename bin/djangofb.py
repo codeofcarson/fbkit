@@ -81,7 +81,7 @@ if __name__ == '__main__':
     
     from django.conf import settings
     
-    need_api_key = not hasattr(settings, 'FACEBOOK_API_KEY')
+    need_api_key = not hasattr(settings, 'FACEBOOK_APP_ID')
     need_middleware = not 'facebook.djangofb.FacebookMiddleware' in settings.MIDDLEWARE_CLASSES
     need_loader = not 'django.template.loaders.app_directories.load_template_source' in settings.TEMPLATE_LOADERS
     need_install_app = not '%s.%s' % (project_name, app_name) in settings.INSTALLED_APPS
@@ -89,7 +89,7 @@ if __name__ == '__main__':
     if need_api_key or need_middleware or need_loader or need_install_app:
         sys.stderr.write("""There are a couple of things you NEED to do before you can use this app:\n\n""")
         if need_api_key:
-            sys.stderr.write(""" * Set FACEBOOK_API_KEY and FACEBOOK_SECRET_KEY to the appropriate values in settings.py\n\n""")
+            sys.stderr.write(""" * Set FACEBOOK_AP_ID and FACEBOOK_APP_SECRET to the appropriate values in settings.py\n\n""")
         if need_middleware:
             sys.stderr.write(""" * Add 'facebook.djangofb.FacebookMiddleware' to your MIDDLEWARE_CLASSES in settings.py\n\n""")
         if need_loader:
