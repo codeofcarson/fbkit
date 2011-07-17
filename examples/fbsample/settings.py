@@ -1,4 +1,8 @@
 # Django settings for fbsample project.
+import sys
+import os
+
+PROJECT_ROOT = os.path.dirname( __file__ )
 
 DEBUG = True
 TEMPLATE_DEBUG = DEBUG
@@ -9,12 +13,16 @@ ADMINS = (
 
 MANAGERS = ADMINS
 
-DATABASE_ENGINE = 'sqlite3'           # 'postgresql_psycopg2', 'postgresql', 'mysql', 'sqlite3' or 'oracle'.
-DATABASE_NAME = 'db.sqlite3'             # Or path to database file if using sqlite3.
-DATABASE_USER = ''             # Not used with sqlite3.
-DATABASE_PASSWORD = ''         # Not used with sqlite3.
-DATABASE_HOST = ''             # Set to empty string for localhost. Not used with sqlite3.
-DATABASE_PORT = ''             # Set to empty string for default. Not used with sqlite3.
+DATABASES = {
+    'default': {
+        'ENGINE': 'django.db.backends.sqlite3', # Add 'postgresql_psycopg2', 'postgresql', 'mysql', 'sqlite3' or 'oracle'.
+        'NAME': 'db.sqlite3',                      # Or path to database file if using sqlite3.
+        'USER': '',                      # Not used with sqlite3.
+        'PASSWORD': '',                  # Not used with sqlite3.
+        'HOST': '',                      # Set to empty string for localhost. Not used with sqlite3.
+        'PORT': '',                      # Set to empty string for default. Not used with sqlite3.
+    }
+}
 
 # Local time zone for this installation. Choices can be found here:
 # http://en.wikipedia.org/wiki/List_of_tz_zones_by_name
@@ -71,6 +79,8 @@ TEMPLATE_DIRS = (
     # Put strings here, like "/home/html/django_templates" or "C:/www/django/templates".
     # Always use forward slashes, even on Windows.
     # Don't forget to use absolute paths, not relative paths.
+    os.path.join(PROJECT_ROOT, 'templates'),
+    os.path.join(PROJECT_ROOT, 'facebook/djangofb/templates'),
 )
 
 INSTALLED_APPS = (
@@ -84,5 +94,8 @@ INSTALLED_APPS = (
 
 # get it from here 
 # http://www.facebook.com/editapps.php?ref=mb
-FACEBOOK_API_KEY = 'x'
-FACEBOOK_SECRET_KEY = 'xx'
+FACEBOOK_APP_ID = '249784291698385'
+FACEBOOK_APP_SECRET = '1ab476e5962c119b61a819e692feff77'
+SITE_URL = 'http://localhost:8000'
+FACEBOOK_PERMS = 'email,publish_stream,user_location'
+FACEBOOK_AUTH_URL = 'http://localhost:8000/auth/?required_permissions=' + FACEBOOK_PERMS

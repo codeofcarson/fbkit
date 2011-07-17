@@ -11,8 +11,7 @@ from ...views import fb_callback
 
 class Command(BaseCommand):
     def handle(self, *args, **options):
-        api_key = settings.FACEBOOK_API_KEY
-        secret_key = settings.FACEBOOK_SECRET_KEY
+        secret_key = settings.FACEBOOK_APP_SECRET
         app_name = getattr(settings, 'FACEBOOK_APP_NAME', None)
         callback_path = getattr(settings, 'FACEBOOK_CALLBACK_PATH', None)
         app_id = getattr(settings, 'FACEBOOK_APP_ID', None)
@@ -20,9 +19,9 @@ class Command(BaseCommand):
         proxy = None
         if getattr(settings, 'USE_HTTP_PROXY', False):
             proxy = settings.HTTP_PROXY
-        facebook = Facebook(api_key,
-                secret_key, app_name=app_name, callback_path=callback_path,
-                proxy=proxy, app_id=app_id, oauth2=oauth2)
+        facebook = Facebook(app_secret, app_name=app_name,
+                callback_path=callback_path, proxy=proxy, app_id=app_id,
+                oauth2=oauth2)
         app_token = facebook.graph.get_app_access_token()
         subscriptions = facebook.graph.filter(app_id).filter('subscriptions')
         subscriptions.delete(access_token=app_token)

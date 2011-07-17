@@ -4,7 +4,7 @@
     {{ fbuser.id }} will be the user's UID, and {{ fbuser.language }}
     is his/her favorite language (Python :-).
   {% endcomment %}
-  Welcome, <fb:name uid="{{ fbuser.id }}" firstnameonly="true" useyou="false" />!
+  Welcome, {{ fbuser }}!
 </fb:header>
 
 <div class="clearfix" style="float: left; border: 1px #d8dfea solid; padding: 10px 10px 10px 10px; margin-left: 30px; margin-bottom: 30px; width: 500px;">

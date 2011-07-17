@@ -1,10 +1,5 @@
 from django.db import models
 
-# get_facebook_client lets us get the current Facebook object
-# from outside of a view, which lets us have cleaner code
-from facebook.djangofb import get_facebook_client
-
-
 def _2int(d, k):
     try:
         d = d.__dict__
@@ -21,9 +16,9 @@ def _2int(d, k):
 class UserManager(models.Manager):
     """Custom manager for a Facebook User."""
     
-    def get_current(self):
+    def get_current(self, request):
         """Gets a User object for the logged-in Facebook user."""
-        facebook = get_facebook_client()
+        facebook = request.facebook
         user, created = self.get_or_create(id=_2int(facebook, 'uid'))
         if created:
             # we could do some custom actions for new users here...
@@ -43,3 +38,6 @@ class User(models.Model):
 
     # Add the custom manager
     objects = UserManager()
+
+    def __unicode__(self):
+        return u'%s' % self.id
