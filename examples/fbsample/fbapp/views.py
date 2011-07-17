@@ -17,11 +17,11 @@ from models import User
 # to let users see the page without granting our app
 # access to their info. See the wiki for details on how
 # to do this.
-#@decorator_from_middleware(FacebookMiddleware)
-@facebook.require_login()
+
+@facebook.require_oauth()
 def canvas(request):
     # Get the User object for the currently logged in user
-    user = User.objects.get_current()
+    user = User.objects.get_current(request)
 
     # Check if we were POSTed the user's new language of choice
     if 'language' in request.POST:
@@ -33,7 +33,7 @@ def canvas(request):
     # the currently logged in user.
     return direct_to_template(request, 'canvas.fbml', extra_context={'fbuser': user})
 
-@facebook.require_login()
+@facebook.require_oauth()
 def ajax(request):
     return HttpResponse('hello world')
 
