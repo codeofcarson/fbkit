@@ -4,14 +4,13 @@ A Python interface to Facebook APIs.
 
 https://github.com/mirumee/fbkit
 
-Based on the pyfacebook library by Samuel Cormier-Iijima (https://github.com/sciyoshi/pyfacebook).
+Based on the "pyfacebook":https://github.com/sciyoshi/pyfacebook library by "Samuel Cormier-Iijima":https://github.com/sciyoshi.
 
 h2. Usage
 
 To use this in your own projects, do the standard:
 
-python setup.py install
-
+<pre><code>python setup.py install</code></pre>
 
 h2. Documentation
 
