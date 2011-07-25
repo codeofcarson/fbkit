@@ -14,4 +14,4 @@ To use this in your own projects, do the standard:
 
 h2. Documentation
 
-Have a look at the examples/ directory. Most of the stuff should be self-explanatory.
+Have a look at the <code>examples/</code> directory. Most of the stuff should be self-explanatory.
