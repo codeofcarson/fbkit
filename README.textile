@@ -1,0 +1,18 @@
+h1. fbkit
+
+A Python interface to Facebook APIs.
+
+https://github.com/mirumee/fbkit
+
+Based on the pyfacebook library by Samuel Cormier-Iijima (https://github.com/sciyoshi/pyfacebook).
+
+h2. Usage
+
+To use this in your own projects, do the standard:
+
+python setup.py install
+
+
+h2. Documentation
+
+Have a look at the examples/ directory. Most of the stuff should be self-explanatory.

@@ -27,8 +27,9 @@
 # SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 from google.appengine.api import memcache
 from google.appengine.ext.webapp import RequestHandler
-from facebook import Facebook
 import yaml
+
+from . import Facebook
 
 """
 Facebook tools for Google AppEngine's object-oriented "webapp" framework.

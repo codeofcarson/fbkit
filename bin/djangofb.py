@@ -40,8 +40,8 @@ if __name__ == '__main__':
     if app_name == project_name:
         sys.stderr.write(style.ERROR('Error: You cannot create an app with the same name (%r) as your project.\n' % app_name))
         sys.exit(1)
-    if app_name == 'facebook':
-        sys.stderr.write(style.ERROR('Error: You cannot name your app "facebook", since this can cause conflicts with imports in Python < 2.5.\n'))
+    if app_name == 'fbkit':
+        sys.stderr.write(style.ERROR('Error: You cannot name your app "fbkit", since this can cause conflicts with imports in Python < 2.5.\n'))
         sys.exit(1)
     if not re.search(r'^\w+$', app_name):
         sys.stderr.write(style.ERROR('Error: %r is not a valid app name. Please use only numbers, letters and underscores.\n' % (app_name)))
@@ -54,9 +54,9 @@ if __name__ == '__main__':
         sys.stderr.write(style.ERROR("Error: %s\n" % e))
         sys.exit(1)
 
-    import facebook
+    import fbkit
 
-    template_dir = os.path.join(facebook.__path__[0], 'djangofb', 'default_app')
+    template_dir = os.path.join(fbkit.__path__[0], 'djangofb', 'default_app')
 
     sys.stderr.write('Creating Facebook application %r...\n' % app_name)
     
@@ -82,7 +82,7 @@ if __name__ == '__main__':
     from django.conf import settings
     
     need_api_key = not hasattr(settings, 'FACEBOOK_APP_ID')
-    need_middleware = not 'facebook.djangofb.FacebookMiddleware' in settings.MIDDLEWARE_CLASSES
+    need_middleware = not 'fbkit.djangokit.FacebookMiddleware' in settings.MIDDLEWARE_CLASSES
     need_loader = not 'django.template.loaders.app_directories.load_template_source' in settings.TEMPLATE_LOADERS
     need_install_app = not '%s.%s' % (project_name, app_name) in settings.INSTALLED_APPS
 
@@ -91,7 +91,7 @@ if __name__ == '__main__':
         if need_api_key:
             sys.stderr.write(""" * Set FACEBOOK_APP_ID and FACEBOOK_APP_SECRET to the appropriate values in settings.py\n\n""")
         if need_middleware:
-            sys.stderr.write(""" * Add 'facebook.djangofb.FacebookMiddleware' to your MIDDLEWARE_CLASSES in settings.py\n\n""")
+            sys.stderr.write(""" * Add 'fbkit.djangokit.FacebookMiddleware' to your MIDDLEWARE_CLASSES in settings.py\n\n""")
         if need_loader:
             sys.stderr.write(""" * Add 'django.template.loaders.app_directories.load_template_source' to your TEMPLATE_LOADERS in settings.py\n\n""")
         if need_install_app:

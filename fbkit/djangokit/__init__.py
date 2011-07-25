@@ -1,21 +1,18 @@
 import datetime
 import decorator
 import logging
-import re
 import time
 import urllib
 import urlparse
 
-import facebook
+from .. import Facebook, FacebookError
 
-from django.http import HttpResponse, HttpResponseRedirect
-from django.utils.http import urlquote
-from django.core.exceptions import ImproperlyConfigured
+from django.http import HttpResponseRedirect
 from django.conf import settings
 
 __all__ = ['Facebook', 'FacebookMiddleware', 'require_oauth']
 
-class Facebook(facebook.Facebook):
+class Facebook(Facebook):
     def oauth2_load_session(self, data):
         if data and 'access_token' in data:
             self.oauth2_token = data['access_token']
@@ -194,7 +191,7 @@ def require_oauth(redirect_path=None,
                 return fb.require_auth(next=redirect_uri,
                         required_permissions=required_permissions)
             return view(request, *args, **kwargs)
-        except facebook.FacebookError as e:
+        except FacebookError as e:
             # Invalid token (I think this can happen if the user logs out)
             # Unfortunately we don't find this out until we use the api 
             if e.code == 190:
