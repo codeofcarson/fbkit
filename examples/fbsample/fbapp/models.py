@@ -28,10 +28,10 @@ class UserManager(models.Manager):
 class User(models.Model):
     """A simple User model for Facebook users."""
 
-    # We use the user's UID as the primary key in our database.
-    id = models.IntegerField(primary_key=True)
+    # Use the user's UID as the primary key in our database.
+    id = models.BigIntegerField(primary_key=True)
 
-    # TODO: The data that you want to store for each user would go here.
+    # The data that you want to store for each user would go here.
     # For this sample, we let users let people know their favorite progamming
     # language, in the spirit of Extended Info.
     language = models.CharField(max_length=64, default='Python')
