@@ -1,16 +1,12 @@
 from django.http import HttpResponse
 from django.views.generic.simple import direct_to_template
-#uncomment the following two lines and the one below
-#if you dont want to use a decorator instead of the middleware
-#from django.utils.decorators import decorator_from_middleware
-#from facebook.djangofb import FacebookMiddleware
 
 # Import the Django helpers
-import facebook.djangofb as facebook
-from facebook import graph
+import fbkit.djangokit as facebook
+from fbkit import graph
 
 # The User model defined in models.py
-from models import User
+from .models import User
 
 # We'll require login for our canvas page. This
 # isn't necessarily a good idea, as we might want

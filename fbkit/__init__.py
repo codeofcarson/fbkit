@@ -43,12 +43,10 @@ is much faster than XML and also uses less bandwith. Go to
 http://undefined.org/python/#simplejson to download it, or do
 apt-get install python-simplejson on a Debian-like system.
 """
+VERSION = (2011, 7, 'pre')
 
 import base64
-import binascii
 import hmac
-import struct
-import sys
 import time
 import urllib
 import urllib2
@@ -83,7 +81,7 @@ except (ImportError, AttributeError):
                 from xml.dom import minidom
                 RESPONSE_FORMAT = 'XML'
 
-__all__ = ['Facebook','create_hmac']
+__all__ = ['Facebook', 'create_hmac']
 
 VERSION = '1.0a2'
 
@@ -97,7 +95,9 @@ def create_hmac(tbhashed):
 
 
 class FacebookError(Exception):
-    """Exception class for errors received from Facebook."""
+    """
+    Exception class for errors received from Facebook.
+    """
 
     def __init__(self, code, msg, args=None):
         self.code = code
@@ -196,7 +196,6 @@ class Facebook(object):
         If this is a desktop application, the next couple of steps you might want to take are:
 
         facebook.auth.createToken() # create an auth token
-        facebook.login()            # show a browser window
         wait_login()                # somehow wait for the user to log in
         facebook.auth.getSession()  # get a session key
 
@@ -475,10 +474,6 @@ if __name__ == '__main__':
     facebook = Facebook(app_id, app_secret)
 
     facebook.auth.createToken()
-
-    # Show login window
-    # Set popup=True if you want login without navigational elements
-    facebook.login()
 
     # Login to the window, then press enter
     print 'After logging in, press enter...'

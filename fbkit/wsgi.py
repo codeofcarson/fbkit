@@ -12,7 +12,7 @@ global in this module.
 # Be careful what you import.  Don't expect everyone to have Pylons,
 # Paste, etc. installed.  Degrade gracefully.
 
-from facebook import Facebook
+from . import Facebook
 
 __docformat__ = "restructuredtext"
 

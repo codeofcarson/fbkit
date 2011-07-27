@@ -69,8 +69,7 @@ MIDDLEWARE_CLASSES = (
     'django.middleware.common.CommonMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
-    
-    'facebook.djangofb.FacebookMiddleware',
+    'fbkit.djangokit.FacebookMiddleware',
 )
 
 ROOT_URLCONF = 'fbsample.urls'
@@ -80,7 +79,6 @@ TEMPLATE_DIRS = (
     # Always use forward slashes, even on Windows.
     # Don't forget to use absolute paths, not relative paths.
     os.path.join(PROJECT_ROOT, 'templates'),
-    os.path.join(PROJECT_ROOT, 'facebook/djangofb/templates'),
 )
 
 INSTALLED_APPS = (
@@ -89,7 +87,7 @@ INSTALLED_APPS = (
     'django.contrib.sessions',
     'django.contrib.sites',
     
-    'fbsample.fbapp',
+    'fbapp',
 )
 
 # get it from here 
