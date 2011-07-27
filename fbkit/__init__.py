@@ -43,8 +43,6 @@ is much faster than XML and also uses less bandwith. Go to
 http://undefined.org/python/#simplejson to download it, or do
 apt-get install python-simplejson on a Debian-like system.
 """
-VERSION = (2011, 7, 'pre')
-
 import base64
 import hmac
 import time
@@ -59,6 +57,19 @@ except ImportError:
 from django.conf import settings
 
 from . import bindings, graph, urlread
+
+VERSION = (2011, 7, 0, 'pre', 0)
+
+def get_version():
+    version = '%s.%s' % (VERSION[0], VERSION[1])
+    if VERSION[2]:
+        version = '%s.%s' % (version, VERSION[2])
+    if VERSION[3:] == ('alpha', 0):
+        version = '%s pre-alpha' % version
+    else:
+        if VERSION[3] != 'final':
+            version = '%s %s %s' % (version, VERSION[3], VERSION[4])
+    return version
 
 # try to use simplejson first, otherwise fallback to XML
 RESPONSE_FORMAT = 'JSON'
@@ -82,8 +93,6 @@ except (ImportError, AttributeError):
                 RESPONSE_FORMAT = 'XML'
 
 __all__ = ['Facebook', 'create_hmac']
-
-VERSION = '1.0a2'
 
 FACEBOOK_URL = 'http://api.facebook.com/restserver.php'
 FACEBOOK_VIDEO_URL = 'http://api-video.facebook.com/restserver.php'

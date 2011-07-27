@@ -2,8 +2,7 @@
 
 from setuptools import setup, find_packages
 
-version_tuple = __import__('fbkit').VERSION
-version = '.'.join([str(v) for v in version_tuple])
+version = __import__('fbkit').get_version()
 
 CLASSIFIERS = [
     'Development Status :: 3 - Alpha',
