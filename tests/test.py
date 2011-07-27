@@ -1,6 +1,6 @@
 import sys
 from minimock import Mock
-import unittest
+from django.utils import unittest
 import urllib2
 try:
     from hashlib import md5
