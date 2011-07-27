@@ -3,7 +3,6 @@ from django.views.generic.simple import direct_to_template
 
 # Import the Django helpers
 import fbkit.djangokit as facebook
-from fbkit import graph
 
 # The User model defined in models.py
 from .models import User
@@ -13,7 +12,6 @@ from .models import User
 # to let users see the page without granting our app
 # access to their info. See the wiki for details on how
 # to do this.
-
 @facebook.require_oauth()
 def canvas(request):
     # Get the User object for the currently logged in user
@@ -24,17 +22,8 @@ def canvas(request):
         user.language = request.POST['language'][:64]
         user.save()
 
-    # User is guaranteed to be logged in, so pass canvas.fbml
+    # User is guaranteed to be logged in, so pass canvas.html
     # an extra 'fbuser' parameter that is the User object for
     # the currently logged in user.
-    return direct_to_template(request, 'canvas.fbml', extra_context={'fbuser': user})
-
-@facebook.require_oauth()
-def ajax(request):
-    return HttpResponse('hello world')
-
-#This is callback function called by facebook during subscription process
-#(look into management/commands/setup_facebook.py)
-@graph.subscription_callback('testingcallback')
-def subscription_callback(request, data):
-    pass
+    return direct_to_template(request, 'canvas.html', 
+                              extra_context={'fbuser': user})
