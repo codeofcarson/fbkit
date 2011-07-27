@@ -1,5 +1,5 @@
 from django.http import HttpResponse
-from django.views.generic.simple import direct_to_template
+from django.template.response import TemplateResponse
 
 # Import the Django helpers
 import fbkit.djangokit as facebook
@@ -25,5 +25,4 @@ def canvas(request):
     # User is guaranteed to be logged in, so pass canvas.html
     # an extra 'fbuser' parameter that is the User object for
     # the currently logged in user.
-    return direct_to_template(request, 'canvas.html', 
-                              extra_context={'fbuser': user})
+    return TemplateResponse(request, 'canvas.html', {'fbuser': user})
