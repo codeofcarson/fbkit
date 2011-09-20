@@ -83,14 +83,20 @@ class VideoProxy(proxies.Proxy):
         except:
             # sending the photo failed, perhaps we are using GAE
             try:
-                from google.appengine.api import urlfetch
-
                 try:
-                    response = urlread.urlread(url=FACEBOOK_VIDEO_URL,data=body,headers={'POST':urlinfo[2],'Content-Type':content_type,'MIME-Version':'1.0'})
+                    response_headers = {
+                        'POST':urlinfo[2],
+                        'Content-Type':content_type,
+                        'MIME-Version':'1.0'
+                    }
+                    response = urlread.urlread(url=FACEBOOK_VIDEO_URL,
+                                               data=body,
+                                               headers=response_headers)
                 except urllib2.URLError:
                     raise Exception('Error uploading video: Facebook returned %s' % (response))
             except ImportError:
-                # could not import from google.appengine.api, so we are not running in GAE
+                # could not import from google.appengine.api, so we are
+                # not running in GAE
                 raise Exception('Error uploading video.')
 
         return self._client._parse_response(response, 'facebook.video.upload')

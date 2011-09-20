@@ -1,5 +1,4 @@
 # Django settings for fbsample project.
-import sys
 import os
 
 PROJECT_ROOT = os.path.dirname( __file__ )

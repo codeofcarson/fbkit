@@ -15,7 +15,6 @@ class Proxy(object):
 
 def build_proxy(namespace, bindings, klass=Proxy):
     def __fixup_param(name, klass, options, param):
-        optional = options.get('optional', False)
         default = options.get('default', None)
         if param is None:
             if klass is list and default:

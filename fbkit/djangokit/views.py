@@ -1,5 +1,3 @@
-import urlparse
-
 from django.views.generic.simple import direct_to_template
 
 def facebook_auth(request, template_name='fbkit/auth.html'):

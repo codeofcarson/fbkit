@@ -27,7 +27,6 @@ try:
         from string import Template
     except ImportError:
         from webob.util.stringtemplate import Template
-    from webob import html_escape
 
 except ImportError:
     pass

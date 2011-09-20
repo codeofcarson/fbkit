@@ -91,17 +91,24 @@ class PhotosProxy(proxies.Proxy):
             response = h.getresponse()
 
             if response.status != 200:
-                raise Exception('Error uploading photo: Facebook returned HTTP %s (%s)' % (response.status, response.reason))
+                raise Exception('Error uploading photo: Facebook returned HTTP '
+                                '%s (%s)' % (response.status, response.reason))
             response = response.read()
         except:
             # sending the photo failed, perhaps we are using GAE
             try:
-                from google.appengine.api import urlfetch
-
                 try:
-                    response = urlread.urlread(url=url,data=body,headers={'POST':urlinfo[2],'Content-Type':content_type,'MIME-Version':'1.0'})
+                    response_headers = {
+                        'POST':urlinfo[2],
+                        'Content-Type':content_type,
+                        'MIME-Version':'1.0'
+                    }
+                    response = urlread.urlread(url=url,
+                                               data=body,
+                                               headers=response_headers)
                 except urllib2.URLError:
-                    raise Exception('Error uploading photo: Facebook returned %s' % (response))
+                    raise Exception('Error uploading photo: Facebook returned '
+                                    '%s' % (response))
             except ImportError:
                 # could not import from google.appengine.api, so we are not running in GAE
                 raise Exception('Error uploading photo.')
