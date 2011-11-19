@@ -16,6 +16,7 @@ class MessageManager(models.Manager):
             m.delete()
         return messages
 
+
 class Message(models.Model):
     """Represents a message for a Facebook user."""
     uid = models.CharField(max_length=25)

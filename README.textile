@@ -12,6 +12,10 @@ To use this in your own projects, do the standard:
 
 <pre><code>python setup.py install</code></pre>
 
+You can also install it with pip
+
+<pre><code>pip install fbkit</code></pre>
+
 h2. Documentation
 
 Have a look at the <code>examples/</code> directory. Most of the stuff should be self-explanatory.

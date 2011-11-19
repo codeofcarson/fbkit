@@ -2,7 +2,8 @@ import urllib
 import urllib2
 import urlparse
 
-from django.http import HttpResponse, HttpResponseForbidden
+from django.http import HttpResponse
+from django.http import HttpResponseForbidden
 
 try:
     import json as simplejson
@@ -18,6 +19,7 @@ except (ImportError, AttributeError):
         except (ImportError, AttributeError):
             import jsonlib as simplejson
             simplejson.loads
+
 
 class Request(urllib2.Request):
     def __init__(self, *args, **kwargs):
@@ -44,6 +46,7 @@ def urlencode(query, doseq=0):
          else:
              query[k] = to_utf8(v)
     return urllib.urlencode(query, doseq)
+
 
 class Graph(object):
     FACEBOOK_GRAPH_SCHEME = 'https'

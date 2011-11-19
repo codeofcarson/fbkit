@@ -1,6 +1,7 @@
 class json(object):
     pass
 
+
 class Proxy(object):
     """Represents a "namespace" of Facebook API calls."""
 

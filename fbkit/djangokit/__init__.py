@@ -32,7 +32,6 @@ class Facebook(Facebook):
     def oauth2_check_session(self, request):
         """
         Check to see if we have an access_token in our session
-        
         """
         valid_token = False
 
@@ -114,7 +113,7 @@ class Facebook(Facebook):
             # functionality (or simply for better caching)
             if additional_permissions:
                 perms_query += ',' + additional_permissions
-                
+
             perms_results = self.fql.query(
                     'select %s from permissions where uid=%s'
                     % (perms_query, self.uid))
@@ -215,7 +214,9 @@ class FacebookMiddleware(object):
                  oauth2=None):
         self.app_secret = app_secret or settings.FACEBOOK_APP_SECRET
         self.app_name = app_name or getattr(settings, 'FACEBOOK_APP_NAME', None)
-        self.callback_path = callback_path or getattr(settings, 'FACEBOOK_CALLBACK_PATH', None)
+        self.callback_path = callback_path or getattr(settings,
+                                                      'FACEBOOK_CALLBACK_PATH',
+                                                      None)
         self.app_id = app_id or getattr(settings, 'FACEBOOK_APP_ID', None)
         self.proxy = None
         if getattr(settings, 'USE_HTTP_PROXY', False):
