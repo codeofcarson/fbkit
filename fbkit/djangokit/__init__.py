@@ -138,7 +138,7 @@ class Facebook(Facebook):
         """
         Process a request handling oauth data.
         """
-        redirect_uri = self.get_canvas_url(request.get_full_path())
+        redirect_uri = self.get_canvas_url(request.build_absolute_uri())
         logging.debug('Restoring oauth data from a saved session')
         if 'facebook' in request.session:
             self.oauth2_load_session(request.session['facebook'])
@@ -181,7 +181,7 @@ def require_oauth(local_prefix=None,
     def newview(view, request, *args, **kwargs):
         try:
             fb = request.facebook
-            redirect_uri = request.get_full_path()
+            redirect_uri = request.build_absolute_uri()
             valid_token = fb.oauth2_check_session(request)
             if valid_token and required_permissions:
                 has_permissions = fb.oauth2_check_permissions(
