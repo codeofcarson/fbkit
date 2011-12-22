@@ -138,7 +138,7 @@ class Facebook(Facebook):
         """
         Process a request handling oauth data.
         """
-        redirect_uri = self.get_canvas_url(request.build_absolute_uri())
+        redirect_uri = self.get_canvas_url(request.build_absolute_uri(request.path))
         logging.debug('Restoring oauth data from a saved session')
         if 'facebook' in request.session:
             self.oauth2_load_session(request.session['facebook'])

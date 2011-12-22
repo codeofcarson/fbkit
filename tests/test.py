@@ -24,7 +24,7 @@ class FBKitTests(unittest.TestCase):
 
         def __call__(self, *args, **kwargs):
             return self
-        
+
         def read(self):
             return self.next_response
 
@@ -36,15 +36,15 @@ class FBKitTests(unittest.TestCase):
 
     def tearDown(self):
         urllib2.urlopen = self.original_urlopen
-    
+
     def test_initialization(self):
         f = fbkit.Facebook(app_id=my_app_id, app_secret=my_app_secret)
         self.assertEquals(f.app_id, my_app_id)
         self.assertEquals(f.app_secret, my_app_secret)
         self.assertEquals(f.auth_token, None)
         self.assertEquals(f.app_name, None)
-        self.assertEquals(f.callback_path, None)
-        
+        self.assertEquals(f.canvas_url, None)
+
     def test_session_parse(self):
         response = {'stuff': 'abcd'}
         self.urlopen.next_response = simplejson.dumps(response)
@@ -83,7 +83,7 @@ class FBKitTests(unittest.TestCase):
                     'redirect_uri=nowhere&display=popup&client_id=%s' %
                     my_app_id)
         self.assertEquals(url, expected)
-        
+
 if __name__ == "__main__":
 
     # Build the test suite
