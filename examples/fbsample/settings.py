@@ -85,14 +85,14 @@ INSTALLED_APPS = (
     'django.contrib.contenttypes',
     'django.contrib.sessions',
     'django.contrib.sites',
-    
+
     'fbapp',
 )
 
-# get it from here 
+# get it from here
 # http://www.facebook.com/editapps.php?ref=mb
 FACEBOOK_APP_ID = '249784291698385'
 FACEBOOK_APP_SECRET = '1ab476e5962c119b61a819e692feff77'
-SITE_URL = 'http://localhost:8000'
+FACEBOOK_CANVAS_URL = 'http://localhost:8000/'
 FACEBOOK_PERMS = 'email,publish_stream,user_location'
 FACEBOOK_AUTH_URL = 'http://localhost:8000/auth/?required_permissions=' + FACEBOOK_PERMS
