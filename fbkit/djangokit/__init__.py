@@ -79,9 +79,9 @@ class Facebook(Facebook):
         """
         Resolve the path to use for the redirect_uri for authorization
         """
-        if self.canvas_url:
-            path = path.replace(self.canvas_url, '')
-            return self.get_app_url(path)
+        if self.canvas_url and self.canvas_url in path:
+                path = path.replace(self.canvas_url, '')
+                return self.get_app_url(path)
         return path
 
     def oauth2_check_permissions(self, request, required_permissions,
