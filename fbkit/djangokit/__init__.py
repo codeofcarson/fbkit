@@ -80,8 +80,8 @@ class Facebook(Facebook):
         Resolve the path to use for the redirect_uri for authorization
         """
         if self.canvas_url and self.canvas_url in path:
-                path = path.replace(self.canvas_url, '')
-                return self.get_app_url(path)
+            path = path.replace(self.canvas_url, '')
+            return self.get_app_url(path)
         return path
 
     def oauth2_check_permissions(self, request, required_permissions,
@@ -138,14 +138,16 @@ class Facebook(Facebook):
         """
         Process a request handling oauth data.
         """
-        redirect_uri = self.get_canvas_url(request.build_absolute_uri(request.path))
         logging.debug('Restoring oauth data from a saved session')
         if 'facebook' in request.session:
             self.oauth2_load_session(request.session['facebook'])
         if 'code' in request.GET:
             logging.debug('Exchanging oauth code for an access_token')
             # We've got a code from an authorisation, so convert it to a access_token
-            self.oauth2_access_token(request.GET['code'], next=redirect_uri)
+            self.oauth2_access_token(request.GET['code'],
+                                     next=request.build_absolute_uri(request.path))
+            redirect_uri = self.get_canvas_url(
+                request.build_absolute_uri(request.path))
             return HttpResponseRedirect(redirect_uri)
         elif 'signed_request' in request.REQUEST:
             logging.debug('Loading oauth data from "signed_request"')
@@ -181,7 +183,7 @@ def require_oauth(local_prefix=None,
     def newview(view, request, *args, **kwargs):
         try:
             fb = request.facebook
-            redirect_uri = request.build_absolute_uri()
+            redirect_uri = request.build_absolute_uri(request.path)
             valid_token = fb.oauth2_check_session(request)
             if valid_token and required_permissions:
                 has_permissions = fb.oauth2_check_permissions(
