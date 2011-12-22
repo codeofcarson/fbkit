@@ -75,21 +75,24 @@ class Facebook(Facebook):
         ))
         return HttpResponseRedirect(url)
 
-    def get_callback_path(self, path):
+    def get_canvas_url(self, path):
         """
         Resolve the path to use for the redirect_uri for authorization
         """
-        return '%s%s' % (settings.SITE_URL, path)
+        if self.canvas_url:
+            path = path.replace(self.canvas_url, '')
+            return self.get_app_url(path)
+        return path
 
     def oauth2_check_permissions(self, request, required_permissions,
                                  additional_permissions=None,
                                  fql_check=True, force_check=True):
         """
         Check for specific extended_permissions.
-        
+
         If fql_check is True (default), oauth2_check_session() should be called
         first to ensure the access_token is in place and valid to make query.
-        
+
         """
         has_permissions = False
 
@@ -107,7 +110,7 @@ class Facebook(Facebook):
         elif fql_check:
             # TODO allow option to use preload FQL for this?
             perms_query = required_permissions
-            
+
             # Note that we can query additional permissions that we
             # don't require.  This can be useful for optional
             # functionality (or simply for better caching)
@@ -135,7 +138,7 @@ class Facebook(Facebook):
         """
         Process a request handling oauth data.
         """
-        redirect_uri = self.get_callback_path(request.path)
+        redirect_uri = self.get_canvas_url(request.get_full_path())
         logging.debug('Restoring oauth data from a saved session')
         if 'facebook' in request.session:
             self.oauth2_load_session(request.session['facebook'])
@@ -158,7 +161,7 @@ class Facebook(Facebook):
         logging.debug('Saving oauth data to session')
         request.session['facebook'] = self.oauth2_save_session()
 
-def require_oauth(redirect_path=None,
+def require_oauth(local_prefix=None,
         required_permissions=settings.FACEBOOK_PERMS, check_permissions=None,
         force_check=True):
     """
@@ -178,7 +181,7 @@ def require_oauth(redirect_path=None,
     def newview(view, request, *args, **kwargs):
         try:
             fb = request.facebook
-            redirect_uri = fb.get_callback_path(request.path)
+            redirect_uri = request.get_full_path()
             valid_token = fb.oauth2_check_session(request)
             if valid_token and required_permissions:
                 has_permissions = fb.oauth2_check_permissions(
@@ -192,7 +195,7 @@ def require_oauth(redirect_path=None,
             return view(request, *args, **kwargs)
         except FacebookError as e:
             # Invalid token (I think this can happen if the user logs out)
-            # Unfortunately we don't find this out until we use the api 
+            # Unfortunately we don't find this out until we use the api
             if e.code == 190:
                 del request.session['facebook']
                 return fb.require_auth(next=redirect_uri,
@@ -204,30 +207,30 @@ class FacebookMiddleware(object):
     """
     Middleware that attaches a Facebook object to every incoming request.
 
-    callback_path can be a string or a callable.  Using a callable lets us
+    canvas_url can be a string or a callable.  Using a callable lets us
     pass in something like lambda reverse('our_canvas_view') so we can follow
     the DRY principle.
     """
 
     def __init__(self, app_secret=None, app_name=None,
-                 callback_path=None, app_id=None,
+                 canvas_url=None, app_id=None,
                  oauth2=None):
         self.app_secret = app_secret or settings.FACEBOOK_APP_SECRET
         self.app_name = app_name or getattr(settings, 'FACEBOOK_APP_NAME', None)
-        self.callback_path = callback_path or getattr(settings,
-                                                      'FACEBOOK_CALLBACK_PATH',
-                                                      None)
+        self.canvas_url = canvas_url or getattr(settings,
+                                                'FACEBOOK_CANVAS_URL',
+                                                None)
         self.app_id = app_id or getattr(settings, 'FACEBOOK_APP_ID', None)
         self.proxy = None
         if getattr(settings, 'USE_HTTP_PROXY', False):
             self.proxy = settings.HTTP_PROXY
 
     def process_request(self, request):
-        callback_path = self.callback_path
-        if callable(callback_path):
-            callback_path = callback_path()
+        canvas_url = self.canvas_url
+        if callable(canvas_url):
+            canvas_url = canvas_url()
         request.facebook = Facebook(self.app_secret, app_name=self.app_name,
-                callback_path=callback_path, proxy=self.proxy,
+                canvas_url=canvas_url, proxy=self.proxy,
                 app_id=self.app_id)
         response = request.facebook.oauth2_process_request(request)
         if response:

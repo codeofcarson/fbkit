@@ -140,10 +140,8 @@ class Facebook(object):
         The auth token that Facebook gives you, either with facebook.auth.createToken,
         or through a GET parameter.
 
-    callback_path
-        The path of the callback set in the Facebook app settings. If your callback is set
-        to http://www.example.com/facebook/callback/, this should be '/facebook/callback/'.
-        Optional, but useful for automatic redirects back to the same page after login.
+    canvas_url
+        The URL of the canvas as entered in the Facebook app settings.
 
     desktop
         True if this is a desktop app, False otherwise. Used for determining how to
@@ -164,7 +162,7 @@ class Facebook(object):
 
     oauth2_token:
         The current OAuth 2.0 token.
-    
+
     oauth2_token_expires:
         The UNIX time when the OAuth 2.0 token expires (seconds).
 
@@ -196,7 +194,7 @@ class Facebook(object):
     """
 
     def __init__(self, app_secret, auth_token=None, app_name=None,
-                 callback_path=None, proxy=None, facebook_url=None,
+                 canvas_url=None, proxy=None, facebook_url=None,
                  facebook_secure_url=None, generate_session_secret=0,
                  app_id=None):
         """
@@ -227,7 +225,7 @@ class Facebook(object):
         self.page_id = None
         self.added = False
         self.app_name = app_name
-        self.callback_path = callback_path
+        self.canvas_url = canvas_url
         self._friends = None
         self.locale = 'en_US'
         self.profile_update_time = None
@@ -381,7 +379,7 @@ class Facebook(object):
         """
         We've called authorize, and received a code, now we need to convert
         this to an access_token
-        
+
         """
         args = {
             'client_id': self.app_id,
@@ -395,7 +393,7 @@ class Facebook(object):
 
         # TODO see if immediate param works as per OAuth 2.0 spec?
         url = self.get_graph_url('oauth/access_token', **args)
-        
+
         if self.proxy:
             proxy_handler = urllib2.ProxyHandler(self.proxy)
             opener = urllib2.build_opener(proxy_handler)
